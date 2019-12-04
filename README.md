@@ -1,2 +1,0 @@
-# admetricks
-Grafico dolar - Postulación
