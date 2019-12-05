@@ -1,7 +1,7 @@
 <template>
-  <b-container>
+  <b-container fluid>
     <b-row class="justify-content-center">
-      <b-col cols="10">
+      <b-col cols="6">
         <Logo class="Brandy" />
         <b-col cols="12" class="main">
           <h4>Variación del dolar</h4>

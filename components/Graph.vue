@@ -1,82 +1,75 @@
 <template lang="html">
-  <b-container class="bv-example-row bv-example-row-flex-cols mt-3">
-    <b-row>
-      <b-col v-if="hasResults" align-self="center">
+  <b-row class="justify-content-center">
+    <b-col col lg="6" md="12" class="mt-3" align-self="center">
+      <DatePickers>
+        <div>
+          <Label>Inicio del período</Label>
+          <Input
+            type="date"
+            :value="dateMin"
+            @change="fetchData"
+          />
+        </div>
+      </DatePickers>
+    </b-col>
+    <b-col col lg="6" md="12" align-self="center">
+      <DatePickers>
+        <div>
+          <Label>Inicio del período</Label>
+          <Input
+            type="date"
+            :value="dateMin"
+            @change="fetchData"
+          />
+        </div>
+      </DatePickers>
+    </b-col>
+      <div v-show="displayGraph">
+        <div
+          v-show="!nonDataGraph && !construyendoGrafico"
+          id="div_graph_dolar"
+          class="sizeGraph"
+        />
         <b-row
+          v-if="construyendoGrafico"
           align-self="center"
-          class="h-50 mb-2 justify-content-center selecionFechaRow"
+          class=" justify-content-center "
         >
-          <b-col col class="mt-2">
-            <span>Inicio período </span>
-            <date-picker
-              v-model="dateMin"
-              size="sm"
-              :disabled="construyendoGrafico"
-              class="inputDate"
-              :config="options"
-              @dp-change="fetchData()"
-            />
-          </b-col>
-          <b-col col class="mt-2">
-            <span>Fin período </span>
-            <date-picker
-              v-model="dateMax"
-              class="inputDate"
-              :disabled="construyendoGrafico"
-              :config="options"
-              @dp-change="fetchData()"
-            />
+          <b-col cols="4" class="btnCancelar">
+            <b-spinner small />
+            Descargando datos...
           </b-col>
         </b-row>
-        <div v-show="displayGraph">
-          <div
-            v-show="!nonDataGraph && !construyendoGrafico"
-            id="'div_graph_dolar'"
-            class="sizeGraph"
-          />
-          <b-row
-            v-if="construyendoGrafico"
-            align-self="center"
-            class=" justify-content-center "
-          >
-            <b-col cols="4" class="btnCancelar">
-              <b-spinner small />
-              Descargando datos...
-            </b-col>
-          </b-row>
-          <div
-            v-show="nonDataGraph && !construyendoGrafico"
-            class="missingESCP m-auto"
-            style="text-align: center; vertical-align: middle;"
-          >
-            {{ nonDataGraph }}
-          </div>
-        </div>
-      </b-col>
-      <b-col v-else>
         <div
-          class="warningSpace m-auto"
+          v-show="nonDataGraph && !construyendoGrafico"
+          class="missingESCP m-auto"
           style="text-align: center; vertical-align: middle;"
         >
-          No existen resultados
+          {{ nonDataGraph }}
         </div>
-      </b-col>
-    </b-row>
-  </b-container>
+      </div>
+  </b-row>
 </template>
 
 <script>
-import datePicker from "vue-bootstrap-datetimepicker"
-import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css"
-import * as am4core from "@amcharts/amcharts4/core"
-import * as am4charts from "@amcharts/amcharts4/charts"
-import am4themes_animated from "@amcharts/amcharts4/themes/animated"
-import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES"
+
+// import * as am4core from "@amcharts/amcharts4/core"
+// import * as am4charts from "@amcharts/amcharts4/charts"
+// import am4themes_animated from "@amcharts/amcharts4/themes/animated"
+// import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES"
 import moment from "moment"
+
+import Label from './UI/Label';
+import Input from './UI/Input';
+import DatePickers from './UI/DatePickers';
+import ControlsRow from './UI/ControlsRow';
 
 export default {
   components: {
-    datePicker
+    DatePickers,
+    Input,
+    Label,
+    ControlsRow
   },
   data() {
     return {
@@ -93,13 +86,18 @@ export default {
     }
   },
   mounted() {
-    this.graphicBuilder("div_graph_dolar")
+    this.graphicBuilder()
     this.fetchData(0, true)
   },
   methods: {
-    graphicBuilder(nombreDiv, index) {
+
+    graphicBuilder() {
+      var am4core = require('@amcharts/amcharts4/core'),
+        am4lang_es_ES = require('@amcharts/amcharts4/lang/es_ES').default,
+        am4themes_animated = require('@amcharts/amcharts4/themes/animated').default,
+        am4charts = require("@amcharts/amcharts4/charts")
       am4core.useTheme(am4themes_animated)
-      var chart = am4core.create(nombreDiv, am4charts.XYChart)
+      var chart = am4core.create('div_graph_dolar', am4charts.XYChart)
       chart.paddingRight = 20
       chart.language.locale = am4lang_es_ES
       chart.numberFormatter.language = new am4core.Language()
@@ -137,7 +135,6 @@ export default {
       series.tooltip.label.textAlign = "middle"
       series.tooltip.label.textValign = "middle"
       chart.cursor = new am4charts.XYCursor()
-      this.graphicContainer[index] = chart
     },
 
     fetchData() {

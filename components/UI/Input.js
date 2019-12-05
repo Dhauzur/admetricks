@@ -6,9 +6,11 @@ const Input = styled.input`
   margin-bottom: 20px;
   height: 40px;
   padding: 8px;
+  padding-left: 25px;
   font-size: 14px;
   color: var(--medium-grey-color);
   outline: none;
+  min-width: 180px;
   width: 100%;
   &:focus {
     border: 1px solid var(--primary-color);
