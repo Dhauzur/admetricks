@@ -1,15 +1,12 @@
 <template>
   <b-container>
-    <Logo class="Brandy" />
     <b-row class="justify-content-center">
-      <b-col cols="10" class="main">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-        esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-        id est laborum.
+      <b-col cols="10">
+        <Logo class="Brandy" />
+        <b-col cols="12" class="main">
+          <h4>Variación del dolar</h4>
+          <Graph/>
+        </b-col>
       </b-col>
     </b-row>
   </b-container>
@@ -17,12 +14,26 @@
 
 <script>
 import Logo from "~/components/Brandy"
+import Graph from "~/components/Graph"
 export default {
   components: {
-    Logo
+    Logo,
+    Graph
   }
 }
 </script>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap");
+h4 {
+  font-family: "Montserrat", Verdana, sans-serif;
+  font-weight: 700;
+  font-size: 2.2em;
+  letter-spacing: -2px;
+  text-align: left !important;
+  margin-left: 10px;
+}
+</style>
 
 <style>
 .main {
@@ -36,21 +47,22 @@ export default {
 }
 
 .Brandy {
-  position: absolute;
-  height: 300px;
-  width: 300px;
+  position: relative;
+  height: 250px;
+  width: 250px;
   z-index: 1;
-  top: 1%;
-  left: 6%;
+  left: 8%;
+  margin-bottom: -51px;
 }
 
 .container {
-  margin: 10% auto;
+  margin: 8% auto;
   height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   background-color: transparent;
+  z-index: 2;
 }
 </style>
