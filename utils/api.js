@@ -1,15 +1,12 @@
 import axios from 'axios';
-import {
-  apiProtocol,
-  apiHost,
-  apiPort,
-} from '../config';
+import { api } from './config';
 
 let axiosApiInstance;
 
 export const setupApiInstance = (username, password) => {
   axiosApiInstance = axios.create({
-    baseURL: `${apiProtocol}://${apiHost}:${apiPort || 80}`,
+    // baseURL: `${apiProtocol}://${apiHost}:${apiPort || 80}`,
+    baseURL: `${ api }`,
     auth: {
       username,
       password,

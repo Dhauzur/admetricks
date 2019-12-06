@@ -45,7 +45,13 @@ module.exports = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+   axios: {
+     proxy: true // Can be also an object with default options
+   },
+
+   proxy: {
+     '/api/': 'http://cne.cloudapi.junar.com',
+   }
   /*
    ** Build configuration
    */

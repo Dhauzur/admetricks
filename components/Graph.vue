@@ -8,6 +8,7 @@
             type="date"
             :value="dateMin"
             @change="fetchData"
+            min="2000-01-01" max="2020-01-01"
           />
         </div>
       </DatePickers>
@@ -18,13 +19,15 @@
           <Label>Inicio del período</Label>
           <Input
             type="date"
-            :value="dateMin"
+            :value="dateMax"
             @change="fetchData"
+            min="2000-01-01" max="2020-01-01"
           />
         </div>
       </DatePickers>
     </b-col>
       <div v-show="displayGraph">
+        <span v-for="d in dolars">{{ d }}</span>
         <div
           v-show="!nonDataGraph && !construyendoGrafico"
           id="div_graph_dolar"
@@ -58,6 +61,7 @@
 // import am4themes_animated from "@amcharts/amcharts4/themes/animated"
 // import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES"
 import moment from "moment"
+import { mapGetters, mapActions  } from 'vuex'
 
 import Label from './UI/Label';
 import Input from './UI/Input';
@@ -73,21 +77,29 @@ export default {
   },
   data() {
     return {
+      graphicContainer: null,
       construyendoGrafico: false,
       displayGraph: false,
-      dateMin: null,
-      dateMax: null,
+      dateMin: '2015-01-01',
+      dateMax: '2019-01-01',
       chart: null,
-      options: {
-        format: "YYYY-MM-DD",
-        useCurrent: false
-      },
       nonDataGraph: ""
     }
   },
   mounted() {
     this.graphicBuilder()
-    this.fetchData(0, true)
+    this.$store.dispatch('fetchDolar', {
+      from: moment(this.dateMin).format('DD-MM-YYYY'),
+      to: moment(this.dateMax).format('DD-MM-YYYY'),
+    }).then(() => {
+      this.fetchData(0, true)
+    });
+
+  },
+  computed: {
+    dolars () {
+      return this.$store.state.dolars
+    }
   },
   methods: {
 
@@ -135,15 +147,12 @@ export default {
       series.tooltip.label.textAlign = "middle"
       series.tooltip.label.textValign = "middle"
       chart.cursor = new am4charts.XYCursor()
+      this.graphicContainer = chart
     },
 
     fetchData() {
       this.construyendoGrafico = true
       this.displayGraph = true
-      this.dateMax = moment(this.dateMin)
-        .add(1, "years")
-        .format("YYYY-MM-DD")
-      // this.nonDataGraph = ""
       // if (!this.dateMin && this.graphicResolution == 0)
       //   this.dateMin = moment(response[0].datetime).format("YYYY-MM-DD")
       //   if (preset && this.graphicResolution == 0)
