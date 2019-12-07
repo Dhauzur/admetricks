@@ -1,6 +1,6 @@
 <template lang="html">
   <b-row class="justify-content-center">
-    <b-col col lg="6" md="12" class="mt-3" align-self="center">
+    <b-col col xl="3" lg="6" md="12"  align-self="center">
       <DatePickers>
         <div>
           <Label>Inicio del período</Label>
@@ -13,7 +13,7 @@
         </div>
       </DatePickers>
     </b-col>
-    <b-col col lg="6" md="12" align-self="center">
+    <b-col col xl="3" lg="6" md="12" align-self="center">
       <DatePickers>
         <div>
           <Label>Inicio del período</Label>
@@ -26,30 +26,26 @@
         </div>
       </DatePickers>
     </b-col>
-      <div v-show="displayGraph">
-        <span v-for="d in dolars">{{ d }}</span>
-        <div
-          v-show="!nonDataGraph && !construyendoGrafico"
-          id="div_graph_dolar"
-          class="sizeGraph"
-        />
-        <b-row
-          v-if="construyendoGrafico"
-          align-self="center"
-          class=" justify-content-center "
-        >
-          <b-col cols="4" class="btnCancelar">
-            <b-spinner small />
-            Descargando datos...
-          </b-col>
-        </b-row>
-        <div
-          v-show="nonDataGraph && !construyendoGrafico"
-          class="missingESCP m-auto"
-          style="text-align: center; vertical-align: middle;"
-        >
-          {{ nonDataGraph }}
-        </div>
+      <div
+        id="div_graph_dolar"
+        class="sizeGraph"
+      />
+      <b-row
+        v-if="construyendoGrafico"
+        align-self="center"
+        class=" justify-content-center "
+      >
+        <b-col cols="4" class="btnCancelar">
+          <b-spinner small />
+          Descargando datos...
+        </b-col>
+      </b-row>
+      <div
+        v-show="nonDataGraph && !construyendoGrafico"
+        class="missingESCP m-auto"
+        style="text-align: center; vertical-align: middle;"
+      >
+        {{ nonDataGraph }}
       </div>
   </b-row>
 </template>
@@ -97,7 +93,7 @@ export default {
 
   },
   computed: {
-    dolars () {
+    dolars() {
       return this.$store.state.dolars
     }
   },
@@ -117,17 +113,21 @@ export default {
       chart.dateFormatter.language = new am4core.Language()
       chart.dateFormatter.language.locale = am4lang_es_ES
       chart.zoomOutButton.disabled = false
-      chart.dateFormatter.inputDateFormat = "yyyy-MM-dd HH:mm"
+      chart.dateFormatter.inputDateFormat = "dd-MM-yyyy"
       var dateAxis = chart.xAxes.push(new am4charts.DateAxis())
       dateAxis.renderer.minGridDistance = 60
       dateAxis.gridIntervals.setAll([
-        { timeUnit: "hour", count: 2 },
         { timeUnit: "day", count: 1 },
         { timeUnit: "day", count: 10 },
         { timeUnit: "day", count: 50 },
-        { timeUnit: "day", count: 100 }
+        { timeUnit: "day", count: 100 },
+        { timeUnit: "day", count: 500 },
+        { timeUnit: "month", count: 1 },
+        { timeUnit: "month", count: 2 },
+        { timeUnit: "month", count: 6 },
+
       ])
-      dateAxis.tooltipDateFormat = "HH:mm, YYYY-MM-dd"
+      dateAxis.tooltipDateFormat = "dd-MM-yyyy"
       dateAxis.renderer.labels.template.location = 0.9
       dateAxis.renderer.grid.template.location = 0.5
       dateAxis.renderer.ticks.template.location = 0
@@ -151,8 +151,9 @@ export default {
     },
 
     fetchData() {
-      this.construyendoGrafico = true
+      this.construyendoGrafico = false
       this.displayGraph = true
+      this.graphicContainer.data = this.dolars
       // if (!this.dateMin && this.graphicResolution == 0)
       //   this.dateMin = moment(response[0].datetime).format("YYYY-MM-DD")
       //   if (preset && this.graphicResolution == 0)
@@ -195,5 +196,10 @@ export default {
 .form-control {
   padding: 3px !important;
   height: 28px;
+}
+
+.sizeGraph {
+  width: 100%;
+  min-height: 40vh;
 }
 </style>

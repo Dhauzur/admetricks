@@ -39,19 +39,26 @@ module.exports = {
     // Doc: https://bootstrap-vue.js.org
     "bootstrap-vue/nuxt",
     // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios"
+    '@nuxtjs/axios',
+    // '@nuxtjs/proxy'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
    axios: {
-     proxy: true // Can be also an object with default options
+     baseURL: "http://cne.cloudapi.junar.com"
+     // proxy: true // Can be also an object with default options
    },
-
-   proxy: {
-     '/api/': 'http://cne.cloudapi.junar.com',
-   }
+  //
+  // proxy: {
+  //   '/api': {
+  //     target: 'http://cne.cloudapi.junar.com',
+  //     pathRewrite: {
+  //       '^/api' : '/'
+  //     }
+  //   }
+  // },
   /*
    ** Build configuration
    */

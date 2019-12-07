@@ -1,4 +1,6 @@
 import { getApiInstance } from '../utils/api';
+import Axios from 'axios'
+import moment from "moment"
 
 const state = () => ({
   dolars: null
@@ -10,7 +12,21 @@ const getters = {
 
  const mutations = {
    setDolarHistory (state, values) {
-     state.dolars = values;
+     var dataGraph = []
+     var date = ''
+     values.data.result.fArray.forEach((value, index) => {
+       if(index > 2) {
+         if(value.fType == 'DATE') date = value.fNum
+         if(value.fType == 'NUMBER') {
+           if(date) dataGraph.push({
+             date: moment(date).format('DD-MM-YYYY'),
+             value: value.fNum
+           })
+         }
+       }
+     })
+     console.log("mutatio");
+     state.dolars = dataGraph;
    },
 }
 
@@ -25,12 +41,17 @@ const getters = {
          from: value.from,
          to: value.to,
        }
-       new Promise((resolve, reject) => AxiosInstance.get('/api/v2/datastreams/VALOR-DOLAR-OBSER/data.json/',{ params })
-       .then(response => {
-         commit('setDolarHistory', response.data.dolares)
-         resolve(true)
-       })
-       .catch(error => reject(false)))
+       return new Promise((resolve, reject) => {
+        Axios.get('http://cne.cloudapi.junar.com/api/v2/datastreams/VALOR-DOLAR-OBSER/data.json/', {params})
+        .then(response => {
+          commit('setDolarHistory', response)
+          resolve(true);
+        })
+        .catch((error) => {
+          reject("Error al intentar hacer la descarga: " + error )
+        });
+      });
+
      } catch(error) {
        // commit('setError', error);
        console.error("Error al intentar hacer la descarga");
