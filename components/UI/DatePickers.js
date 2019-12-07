@@ -1,4 +1,4 @@
-import styled from 'vue-styled-components';
+import styled from "vue-styled-components"
 
 const DatePickers = styled.div`
   display: flex;
@@ -12,6 +12,6 @@ const DatePickers = styled.div`
   label {
     font-size: 12px;
   }
-`;
+`
 
-export default DatePickers;
+export default DatePickers

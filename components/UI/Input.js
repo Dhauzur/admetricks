@@ -1,4 +1,4 @@
-import styled from 'vue-styled-components';
+import styled from "vue-styled-components"
 
 const Input = styled.input`
   border: 1px solid var(--light-grey-color);
@@ -15,6 +15,6 @@ const Input = styled.input`
   &:focus {
     border: 1px solid var(--primary-color);
   }
-`;
+`
 
-export default Input;
+export default Input

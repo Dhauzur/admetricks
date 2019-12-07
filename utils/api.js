@@ -1,50 +1,50 @@
-import axios from 'axios';
-import { api } from './config';
+import axios from "axios"
+import { api } from "./config"
 
-let axiosApiInstance;
+let axiosApiInstance
 
 export const setupApiInstance = (username, password) => {
   axiosApiInstance = axios.create({
     // baseURL: `${apiProtocol}://${apiHost}:${apiPort || 80}`,
-    baseURL: `${ api }`,
+    baseURL: `${api}`,
     auth: {
       username,
-      password,
+      password
     },
     headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
+      "Content-Type": "application/json"
+    }
+  })
+}
 
 export const getApiInstance = () => {
   if (axiosApiInstance) {
-    return axiosApiInstance;
+    return axiosApiInstance
   }
-  setupApiInstance();
-  return axiosApiInstance;
-};
+  setupApiInstance()
+  return axiosApiInstance
+}
 
-export const setAccessToken = (token) => {
-  const axiosApiInstance = getApiInstance();
-  axiosApiInstance.defaults.headers.Authorization = token;
-};
+export const setAccessToken = token => {
+  const axiosApiInstance = getApiInstance()
+  axiosApiInstance.defaults.headers.Authorization = token
+}
 
 export const getAccessToken = () => {
   if (axiosApiInstance) {
-    return axiosApiInstance.defaults.headers.Authorization;
+    return axiosApiInstance.defaults.headers.Authorization
   }
-  throw new Error('Axios API instance not configured properly');
-};
+  throw new Error("Axios API instance not configured properly")
+}
 
 export const removeAccessToken = () => {
-  setAccessToken(undefined);
-};
+  setAccessToken(undefined)
+}
 
 export default {
   setupApiInstance,
   getApiInstance,
   setAccessToken,
   getAccessToken,
-  removeAccessToken,
-};
+  removeAccessToken
+}

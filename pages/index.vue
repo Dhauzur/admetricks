@@ -5,7 +5,7 @@
         <Logo class="Brandy" />
         <b-col cols="12" class="main">
           <h4>Variación del dolar</h4>
-          <Graph/>
+          <Graph />
         </b-col>
       </b-col>
     </b-row>

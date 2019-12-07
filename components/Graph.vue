@@ -1,33 +1,31 @@
 <template lang="html">
   <b-row class="justify-content-left ">
-      <DatePickers class=" ml-4">
-        <div>
-          <Label>Inicio del período</Label>
-          <Input
-            type="date"
-            :value="dateMin"
-            @change="setStartDate"
-            min="2000-01-01" max="2020-01-01"
-          />
-        </div>
-      </DatePickers>
-      <DatePickers class="ml-4">
-        <div>
-          <Label>Inicio del período</Label>
-          <Input
-            type="date"
-            :value="dateMax"
-            @change="setEndDate"
-            min="2000-01-01" max="2020-01-01"
-          />
-        </div>
-      </DatePickers>
+    <DatePickers class=" ml-4">
+      <div>
+        <Label>Inicio del período</Label>
+        <Input
+          type="date"
+          :value="dateMin"
+          min="2000-01-01"
+          max="2020-01-01"
+          @change="setStartDate"
+        />
+      </div>
+    </DatePickers>
+    <DatePickers class="ml-4">
+      <div>
+        <Label>Inicio del período</Label>
+        <Input
+          type="date"
+          :value="dateMax"
+          min="2000-01-01"
+          max="2020-01-01"
+          @change="setEndDate"
+        />
+      </div>
+    </DatePickers>
     <b-col cols="12">
-      <div
-        v-show="!loading.status"
-        id="div_graph_dolar"
-        class="sizeGraph"
-      />
+      <div v-show="!loading.status" id="div_graph_dolar" class="sizeGraph" />
       <b-row
         v-if="loading.status"
         align-self="center"
@@ -46,26 +44,22 @@
         {{ nonDataGraph }}
       </div>
     </b-col>
-
   </b-row>
 </template>
 
 <script>
-
 import moment from "moment"
-import { mapGetters, mapActions  } from 'vuex'
+import { mapGetters } from "vuex"
 
-import Label from './UI/Label';
-import Input from './UI/Input';
-import DatePickers from './UI/DatePickers';
-import ControlsRow from './UI/ControlsRow';
+import Label from "./UI/Label"
+import Input from "./UI/Input"
+import DatePickers from "./UI/DatePickers"
 
 export default {
   components: {
     DatePickers,
     Input,
-    Label,
-    ControlsRow
+    Label
   },
   data() {
     return {
@@ -76,25 +70,25 @@ export default {
       nonDataGraph: ""
     }
   },
+  computed: mapGetters({
+    dolars: "graph/dolars",
+    dateMin: "graph/dateMin",
+    dateMax: "graph/dateMax",
+    loading: "graph/loading"
+  }),
   mounted() {
     this.graphicBuilder()
     this.fetchData()
   },
-  computed: mapGetters({
-    dolars: 'graph/dolars',
-    dateMin: 'graph/dateMin',
-    dateMax: 'graph/dateMax',
-    loading: 'graph/loading',
-  }),
   methods: {
-
     graphicBuilder() {
-      var am4core = require('@amcharts/amcharts4/core'),
-        am4lang_es_ES = require('@amcharts/amcharts4/lang/es_ES').default,
-        am4themes_animated = require('@amcharts/amcharts4/themes/animated').default,
+      var am4core = require("@amcharts/amcharts4/core"),
+        am4lang_es_ES = require("@amcharts/amcharts4/lang/es_ES").default,
+        am4themes_animated = require("@amcharts/amcharts4/themes/animated")
+          .default,
         am4charts = require("@amcharts/amcharts4/charts")
       am4core.useTheme(am4themes_animated)
-      var chart = am4core.create('div_graph_dolar', am4charts.XYChart)
+      var chart = am4core.create("div_graph_dolar", am4charts.XYChart)
       chart.paddingRight = 20
       chart.language.locale = am4lang_es_ES
       chart.numberFormatter.language = new am4core.Language()
@@ -111,8 +105,7 @@ export default {
         { timeUnit: "day", count: 50 },
         { timeUnit: "month", count: 1 },
         { timeUnit: "month", count: 2 },
-        { timeUnit: "year", count: 1 },
-
+        { timeUnit: "year", count: 1 }
       ])
       dateAxis.tooltipDateFormat = "yyyy-MM-dd"
       dateAxis.renderer.labels.template.location = 0.9
@@ -137,33 +130,34 @@ export default {
       this.graphicContainer = chart
     },
 
-    setStartDate (e) {
-      this.$store.commit('graph/setStartDate', e.target.value);
+    setStartDate(e) {
+      this.$store.commit("graph/setStartDate", e.target.value)
       this.fetchData()
     },
-    setEndDate (e) {
-      this.$store.commit('graph/setEndDate', e.target.value);
+    setEndDate(e) {
+      this.$store.commit("graph/setEndDate", e.target.value)
       this.fetchData()
     },
 
     fetchData() {
-      this.$store.commit('graph/setLoading', { status: 'Descargando datos...' });
-      this.$store.dispatch('graph/fetchDolar', {
-        from: moment(this.dateMin).format('YYYY-MM-DD'),
-        to: moment(this.dateMax).format('YYYY-MM-DD'),
-      }).then(() => {
-        this.construyendoGrafico = false
-        this.displayGraph = true
-        this.graphicContainer.data = this.dolars
-        this.$store.commit('graph/setLoading', { status: '' });
-      });
+      this.$store.commit("graph/setLoading", { status: "Descargando datos..." })
+      this.$store
+        .dispatch("graph/fetchDolar", {
+          from: moment(this.dateMin).format("YYYY-MM-DD"),
+          to: moment(this.dateMax).format("YYYY-MM-DD")
+        })
+        .then(() => {
+          this.construyendoGrafico = false
+          this.displayGraph = true
+          this.graphicContainer.data = this.dolars
+          this.$store.commit("graph/setLoading", { status: "" })
+        })
     }
   }
 }
 </script>
 
 <style lang="css">
-
 .btnCancelar {
   cursor: pointer;
   padding: 2px;
