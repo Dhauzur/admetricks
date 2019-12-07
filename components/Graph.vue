@@ -1,7 +1,6 @@
 <template lang="html">
-  <b-row class="justify-content-center">
-    <b-col col xl="3" lg="6" md="12"  align-self="center">
-      <DatePickers>
+  <b-row class="justify-content-left ">
+      <DatePickers class=" ml-4">
         <div>
           <Label>Inicio del período</Label>
           <Input
@@ -12,9 +11,7 @@
           />
         </div>
       </DatePickers>
-    </b-col>
-    <b-col col xl="3" lg="6" md="12" align-self="center">
-      <DatePickers>
+      <DatePickers class="ml-4">
         <div>
           <Label>Inicio del período</Label>
           <Input
@@ -25,19 +22,20 @@
           />
         </div>
       </DatePickers>
-    </b-col>
+    <b-col cols="12">
       <div
+        v-show="!loading.status"
         id="div_graph_dolar"
         class="sizeGraph"
       />
       <b-row
-        v-if="construyendoGrafico"
+        v-if="loading.status"
         align-self="center"
         class=" justify-content-center "
       >
-        <b-col cols="4" class="btnCancelar">
+        <b-col cols="6" class="btnCancelar">
           <b-spinner small />
-          Descargando datos...
+          {{ loading.status }}
         </b-col>
       </b-row>
       <div
@@ -47,6 +45,8 @@
       >
         {{ nonDataGraph }}
       </div>
+    </b-col>
+
   </b-row>
 </template>
 
@@ -84,6 +84,7 @@ export default {
     dolars: 'graph/dolars',
     dateMin: 'graph/dateMin',
     dateMax: 'graph/dateMax',
+    loading: 'graph/loading',
   }),
   methods: {
 
@@ -148,6 +149,7 @@ export default {
     },
 
     fetchData() {
+      this.$store.commit('graph/setLoading', { status: 'Descargando datos...' });
       this.$store.dispatch('graph/fetchDolar', {
         from: moment(this.dateMin).format('YYYY-MM-DD'),
         to: moment(this.dateMax).format('YYYY-MM-DD'),
@@ -155,6 +157,7 @@ export default {
         this.construyendoGrafico = false
         this.displayGraph = true
         this.graphicContainer.data = this.dolars
+        this.$store.commit('graph/setLoading', { status: '' });
       });
     }
   }
@@ -162,6 +165,27 @@ export default {
 </script>
 
 <style lang="css">
+
+.btnCancelar {
+  cursor: pointer;
+  padding: 2px;
+  margin: 5px;
+  min-width: 120px;
+  border: 2px solid transparent;
+  border-radius: 30px;
+  color: #fefefe !important;
+  background-color: #dc3545;
+  text-align: center;
+  transition: all ease-in-out 0.5s;
+}
+
+.btnCancelar:hover {
+  transition: all ease-in-out 0.5s;
+  color: #dc3545 !important;
+  background-color: #dc35441a;
+  border-color: transparent !important;
+}
+
 .missingESCP {
   border: 1px solid red;
   background-color: #fbd8d8;
