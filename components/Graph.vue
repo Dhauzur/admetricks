@@ -109,12 +109,10 @@ export default {
         { timeUnit: "day", count: 1 },
         { timeUnit: "day", count: 10 },
         { timeUnit: "day", count: 50 },
-        { timeUnit: "day", count: 100 },
-        { timeUnit: "day", count: 500 },
         { timeUnit: "month", count: 1 },
         { timeUnit: "month", count: 2 },
-        { timeUnit: "month", count: 6 },
         { timeUnit: "year", count: 1 },
+
       ])
       dateAxis.tooltipDateFormat = "yyyy-MM-dd"
       dateAxis.renderer.labels.template.location = 0.9
