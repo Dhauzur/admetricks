@@ -7,7 +7,7 @@
           <Input
             type="date"
             :value="dateMin"
-            @change="fetchData"
+            @change="setStartDate"
             min="2000-01-01" max="2020-01-01"
           />
         </div>
@@ -20,7 +20,7 @@
           <Input
             type="date"
             :value="dateMax"
-            @change="fetchData"
+            @change="setEndDate"
             min="2000-01-01" max="2020-01-01"
           />
         </div>
@@ -52,10 +52,6 @@
 
 <script>
 
-// import * as am4core from "@amcharts/amcharts4/core"
-// import * as am4charts from "@amcharts/amcharts4/charts"
-// import am4themes_animated from "@amcharts/amcharts4/themes/animated"
-// import am4lang_es_ES from "@amcharts/amcharts4/lang/es_ES"
 import moment from "moment"
 import { mapGetters, mapActions  } from 'vuex'
 
@@ -76,27 +72,19 @@ export default {
       graphicContainer: null,
       construyendoGrafico: false,
       displayGraph: false,
-      dateMin: '2015-01-01',
-      dateMax: '2019-01-01',
       chart: null,
       nonDataGraph: ""
     }
   },
   mounted() {
     this.graphicBuilder()
-    this.$store.dispatch('fetchDolar', {
-      from: moment(this.dateMin).format('DD-MM-YYYY'),
-      to: moment(this.dateMax).format('DD-MM-YYYY'),
-    }).then(() => {
-      this.fetchData(0, true)
-    });
-
+    this.fetchData()
   },
-  computed: {
-    dolars() {
-      return this.$store.state.dolars
-    }
-  },
+  computed: mapGetters({
+    dolars: 'graph/dolars',
+    dateMin: 'graph/dateMin',
+    dateMax: 'graph/dateMax',
+  }),
   methods: {
 
     graphicBuilder() {
@@ -113,7 +101,7 @@ export default {
       chart.dateFormatter.language = new am4core.Language()
       chart.dateFormatter.language.locale = am4lang_es_ES
       chart.zoomOutButton.disabled = false
-      chart.dateFormatter.inputDateFormat = "dd-MM-yyyy"
+      chart.dateFormatter.inputDateFormat = "yyyy-MM-dd"
       var dateAxis = chart.xAxes.push(new am4charts.DateAxis())
       dateAxis.renderer.minGridDistance = 60
       dateAxis.gridIntervals.setAll([
@@ -125,9 +113,9 @@ export default {
         { timeUnit: "month", count: 1 },
         { timeUnit: "month", count: 2 },
         { timeUnit: "month", count: 6 },
-
+        { timeUnit: "year", count: 1 },
       ])
-      dateAxis.tooltipDateFormat = "dd-MM-yyyy"
+      dateAxis.tooltipDateFormat = "yyyy-MM-dd"
       dateAxis.renderer.labels.template.location = 0.9
       dateAxis.renderer.grid.template.location = 0.5
       dateAxis.renderer.ticks.template.location = 0
@@ -150,34 +138,24 @@ export default {
       this.graphicContainer = chart
     },
 
+    setStartDate (e) {
+      this.$store.commit('graph/setStartDate', e.target.value);
+      this.fetchData()
+    },
+    setEndDate (e) {
+      this.$store.commit('graph/setEndDate', e.target.value);
+      this.fetchData()
+    },
+
     fetchData() {
-      this.construyendoGrafico = false
-      this.displayGraph = true
-      this.graphicContainer.data = this.dolars
-      // if (!this.dateMin && this.graphicResolution == 0)
-      //   this.dateMin = moment(response[0].datetime).format("YYYY-MM-DD")
-      //   if (preset && this.graphicResolution == 0)
-      //     this.dateMax = response[response.length - 1].datetime
-      //   response = response.filter(
-      //     resultado =>
-      //       moment(resultado.datetime).isSameOrAfter(this.dateMin) &&
-      //       moment(resultado.datetime).isSameOrBefore(this.dateMax)
-      //   )
-      // }
-      // if (response.length == 0) {
-      //   this.construyendoGrafico = false
-      //   this.nonDataGraph = "No existen datos para resolución "
-      // } else {
-      //   var data = []
-      //     response.forEach(dato => {
-      //       data.push({
-      //         date: dato.datetime,
-      //         value: dato.value.toFixed(1)
-      //       })
-      //     })
-      //     this.graphicContainer[2].data = data
-      //     this.construyendoGrafico = false
-      // }
+      this.$store.dispatch('graph/fetchDolar', {
+        from: moment(this.dateMin).format('YYYY-MM-DD'),
+        to: moment(this.dateMax).format('YYYY-MM-DD'),
+      }).then(() => {
+        this.construyendoGrafico = false
+        this.displayGraph = true
+        this.graphicContainer.data = this.dolars
+      });
     }
   }
 }
