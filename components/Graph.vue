@@ -24,6 +24,7 @@
         />
       </div>
     </DatePickers>
+    <Variation/>
     <b-col cols="12">
       <div v-show="!loading.status" id="div_graph_dolar" class="sizeGraph" />
       <b-row
@@ -31,7 +32,7 @@
         align-self="center"
         class=" justify-content-center "
       >
-        <b-col cols="6" class="btnCancelar">
+        <b-col cols="7" class="btnCancelar">
           <b-spinner small />
           {{ loading.status }}
         </b-col>
@@ -55,11 +56,14 @@ import Label from "./UI/Label"
 import Input from "./UI/Input"
 import DatePickers from "./UI/DatePickers"
 
+import Variation from "~/components/Variation"
+
 export default {
   components: {
     DatePickers,
     Input,
-    Label
+    Label,
+    Variation
   },
   data() {
     return {
@@ -149,8 +153,11 @@ export default {
         .then(() => {
           this.construyendoGrafico = false
           this.displayGraph = true
+          if(this.dolars.length == 0) this.$store.commit("graph/setLoading", { status: "No existen datos" })
           this.graphicContainer.data = this.dolars
           this.$store.commit("graph/setLoading", { status: "" })
+          if(moment(this.dateMax).isBefore(this.dateMin)) this.$store.commit("graph/setLoading", { status: "La fecha máxima es menor a la mínima ¯\\_(ツ)_/¯"  })
+
         })
     }
   }

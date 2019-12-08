@@ -5,7 +5,7 @@
         <Logo class="Brandy" />
         <b-col cols="12" class="main">
           <h4>Variación del dolar</h4>
-          <Graph />
+          <Graph v-if="reloadGraph" />
         </b-col>
       </b-col>
     </b-row>
@@ -15,10 +15,29 @@
 <script>
 import Logo from "~/components/Brandy"
 import Graph from "~/components/Graph"
+
 export default {
   components: {
     Logo,
-    Graph
+    Graph,
+  },
+  data() {
+    return {
+      reloadGraph: true,
+    }
+  },
+  mounted() {
+    this.$nextTick(function() {
+      window.addEventListener('resize', this.regenerate);
+    })
+  },
+  methods: {
+    regenerate() {
+      this.reloadGraph = false
+      setTimeout(() => {
+        this.reloadGraph = true
+      }, 1000);
+    }
   }
 }
 </script>
