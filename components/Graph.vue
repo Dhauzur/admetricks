@@ -24,7 +24,7 @@
         />
       </div>
     </DatePickers>
-    <Variation/>
+    <Variation />
     <b-col cols="12">
       <div v-show="!loading.status" id="div_graph_dolar" class="sizeGraph" />
       <b-row
@@ -138,6 +138,7 @@ export default {
       this.$store.commit("graph/setStartDate", e.target.value)
       this.fetchData()
     },
+
     setEndDate(e) {
       this.$store.commit("graph/setEndDate", e.target.value)
       this.fetchData()
@@ -153,11 +154,16 @@ export default {
         .then(() => {
           this.construyendoGrafico = false
           this.displayGraph = true
-          if(this.dolars.length == 0) this.$store.commit("graph/setLoading", { status: "No existen datos" })
+          if (this.dolars.length == 0)
+            this.$store.commit("graph/setLoading", {
+              status: "No existen datos"
+            })
           this.graphicContainer.data = this.dolars
           this.$store.commit("graph/setLoading", { status: "" })
-          if(moment(this.dateMax).isBefore(this.dateMin)) this.$store.commit("graph/setLoading", { status: "La fecha máxima es menor a la mínima ¯\\_(ツ)_/¯"  })
-
+          if (moment(this.dateMax).isBefore(this.dateMin))
+            this.$store.commit("graph/setLoading", {
+              status: "La fecha máxima es menor a la mínima ¯\\_(ツ)_/¯"
+            })
         })
     }
   }

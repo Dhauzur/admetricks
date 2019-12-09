@@ -19,16 +19,16 @@ import Graph from "~/components/Graph"
 export default {
   components: {
     Logo,
-    Graph,
+    Graph
   },
   data() {
     return {
-      reloadGraph: true,
+      reloadGraph: true
     }
   },
   mounted() {
     this.$nextTick(function() {
-      window.addEventListener('resize', this.regenerate);
+      window.addEventListener("resize", this.regenerate)
     })
   },
   methods: {
@@ -36,7 +36,7 @@ export default {
       this.reloadGraph = false
       setTimeout(() => {
         this.reloadGraph = true
-      }, 1000);
+      }, 1000)
     }
   }
 }

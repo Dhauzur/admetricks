@@ -1,13 +1,11 @@
 <template lang="html">
   <div class="mainVariation" :class="typeColor">
-    <span class="h6" >{{ variation }}</span>
+    <span class="h6">{{ variation }}</span>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex"
-
-
 
 export default {
   computed: {
@@ -17,8 +15,8 @@ export default {
     }),
     typeColor() {
       return {
-        'colorRojo': this.variation < 0,
-        'colorVerde': this.variation >= 0
+        colorRojo: this.variation < 0,
+        colorVerde: this.variation >= 0
       }
     }
   }
