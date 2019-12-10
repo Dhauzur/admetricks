@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <b-row class="justify-content-left ">
     <DatePickers class=" ml-4">
       <div>

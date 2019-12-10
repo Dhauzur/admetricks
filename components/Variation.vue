@@ -1,4 +1,4 @@
-<template lang="html">
+<template >
   <div class="mainVariation" :class="typeColor">
     <span class="h6">{{ variation }}</span>
   </div>

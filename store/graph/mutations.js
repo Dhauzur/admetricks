@@ -21,11 +21,9 @@ export default {
         if (value.fType == "DATE")
           date = moment(value.fNum).format("YYYY-MM-DD")
         if (value.fType == "NUMBER") {
-          if (
-            date &&
-            moment(date).isSameOrAfter(values.from) &&
-            moment(date).isSameOrBefore(values.to)
-          )
+          if (date &&
+              moment(date).isSameOrAfter(values.from) &&
+              moment(date).isSameOrBefore(values.to))
             dataGraph.push({
               date: date,
               value: value.fNum
