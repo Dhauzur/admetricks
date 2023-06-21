@@ -21,7 +21,7 @@
     "cross-env": "^5.2.0",
     "express": "^4.16.4",
     "moment": "^2.24.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^3.4.3",
     "pc-bootstrap4-datetimepicker": "^4.17.50",
     "vue-bootstrap-datetimepicker": "^5.0.1",
     "vue-styled-components": "^1.4.14"
